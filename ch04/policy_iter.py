@@ -50,6 +50,7 @@ def policy_iter(env, gamma, threshold=0.001, is_render=True):
             break
         pi = new_pi
 
+    print(V, pi)
     return pi
 
 
@@ -57,3 +58,6 @@ if __name__ == '__main__':
     env = GridWorld()
     gamma = 0.9
     pi = policy_iter(env, gamma)
+
+
+

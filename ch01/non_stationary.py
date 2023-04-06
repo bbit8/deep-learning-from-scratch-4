@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from bandit import Agent
 
-
 class NonStatBandit:
     def __init__(self, arms=10):
         self.arms = arms
@@ -22,14 +21,35 @@ class AlphaAgent:
         self.epsilon = epsilon
         self.Qs = np.zeros(actions)
         self.alpha = alpha
+        self.n = np.ones(actions)
+
+        self.ts_alpha = np.ones(actions)
+        self.ts_beta = np.ones(actions)
+        self.actions = actions
+
 
     def update(self, action, reward):
         self.Qs[action] += (reward - self.Qs[action]) * self.alpha
+        if reward > 0:
+            self.ts_alpha[action] += 1
+        else:
+            self.ts_beta[action] += 1
 
-    def get_action(self):
+    def get_action_(self):
         if np.random.rand() < self.epsilon:
             return np.random.randint(0, len(self.Qs))
         return np.argmax(self.Qs)
+
+    def get_action(self):
+        ucbs = self.Qs + np.sqrt(2 * np.log(np.sum(self.n)) / self.n)
+        action = np.argmax(ucbs)
+        self.n[action] += 1
+        return action
+
+    def get_action_ts(self):
+        samples = [np.random.beta(self.ts_alpha[i] + 1, self.ts_beta[i] + 1) for i in range(self.actions)]
+        action = np.argmax(samples)
+        return action
 
 
 runs = 200

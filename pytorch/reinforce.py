@@ -30,7 +30,8 @@ class Agent:
         self.optimizer = optim.Adam(self.pi.parameters(), lr=self.lr)
 
     def get_action(self, state):
-        state = torch.tensor(state[np.newaxis, :])
+        state = torch.tensor(state[0]).unsqueeze(dim=0)
+        print(state)
         probs = self.pi(state)
         probs = probs[0]
         m = Categorical(probs)
@@ -64,6 +65,7 @@ for episode in range(3000):
 
     while not done:
         action, prob = agent.get_action(state)
+        print(action, prob)
         next_state, reward, done, info = env.step(action)
 
         agent.add(reward, prob)

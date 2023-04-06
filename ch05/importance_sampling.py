@@ -16,7 +16,8 @@ for _ in range(n):
 print('MC: {:.2f} (var: {:.2f})'.format(np.mean(samples), np.var(samples)))
 
 # =========== Importance Sampling ===========
-b = np.array([0.2, 0.2, 0.6])  #b = np.array([1/3, 1/3, 1/3])
+#b = np.array([0.2, 0.2, 0.6])  
+b = np.array([1/3, 1/3, 1/3])
 samples = []
 for _ in range(n):
     idx = np.arange(len(b))  # [0, 1, 2]

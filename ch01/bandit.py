@@ -50,6 +50,10 @@ if __name__ == '__main__':
         rates.append(total_reward / (step + 1))
 
     print(total_reward)
+    print(agent.ns)
+    print(agent.Qs)
+    print(bandit.rates)
+    
 
     plt.ylabel('Total reward')
     plt.xlabel('Steps')

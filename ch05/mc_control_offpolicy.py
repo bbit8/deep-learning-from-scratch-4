@@ -46,6 +46,31 @@ class McOffPolicyAgent:
             self.pi[state] = greedy_probs(self.Q, state, epsilon=0)
             self.b[state] = greedy_probs(self.Q, state, self.epsilon)
 
+    # Weighted Importance Sampling
+    def update_with_weight(self):
+        G = 0
+        W = 1
+        C = defaultdict(lambda: 0)
+        temp_pi = defaultdict(lambda: 0)
+
+        for data in reversed(self.memory):
+            state, action, reward = data
+            key = (state, action)
+
+            G = self.gamma * G + reward
+            C[key] += W
+
+            self.Q[key] += (G - self.Q[key]) * W / C[key]
+            temp_pi[state] = greedy_probs(self.Q, state, epsilon=0)
+            if temp_pi[state][action] != 1:
+                break
+
+            self.pi[state] = greedy_probs(self.Q, state, epsilon=0)
+            self.b[state] = greedy_probs(self.Q, state, self.epsilon)
+
+            W *= W / self.b[state][action]
+
+
 
 env = GridWorld()
 agent = McOffPolicyAgent()

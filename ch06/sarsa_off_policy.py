@@ -44,7 +44,8 @@ class SarsaOffPolicyAgent:
             next_q = self.Q[next_state, next_action]
             rho = self.pi[next_state][next_action] / self.b[next_state][next_action]
 
-        target = rho * (reward + self.gamma * next_q)
+        target = reward + self.gamma * next_q * rho
+        # target = rho * (reward + self.gamma * next_q)
         self.Q[state, action] += (target - self.Q[state, action]) * self.alpha
 
         self.pi[state] = greedy_probs(self.Q, state, 0)
