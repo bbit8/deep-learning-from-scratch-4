@@ -34,6 +34,14 @@ class ValueNet(nn.Module):
         x = self.l2(x)
         return x
 
+"""
+1. actor: entropy regulation
+2. value critic
+3. Q critic
+4. Two Q Net
+
+
+"""
 
 class Agent:
     def __init__(self):
@@ -56,6 +64,9 @@ class Agent:
         action = m.sample().item()
         return action, probs[action]
 
+    def entropy(self):
+        pass
+
     def update(self, state, action_prob, reward, next_state, done):
         state = torch.tensor(state[np.newaxis, :])
         next_state = torch.tensor(next_state[np.newaxis, :])
@@ -66,8 +77,8 @@ class Agent:
         loss_fn = nn.MSELoss()
         loss_v = loss_fn(v, target)
 
-        delta = target - v # normalize
-        loss_pi = -torch.log(action_prob) * delta.item()
+        delta = target - v
+        loss_pi = -torch.log(action_prob) * delta.item() + entropy(self.pi(state)) # 
 
         self.optimizer_v.zero_grad()
         self.optimizer_pi.zero_grad()

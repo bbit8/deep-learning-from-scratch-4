@@ -40,6 +40,9 @@ class McOffPolicyAgent:
             key = (state, action)
 
             G = self.gamma * rho * G + reward
+            # G = rho * (reward + self.gamma * G)
+            # G_pi?
+            # G_b
             self.Q[key] += (G - self.Q[key]) * self.alpha
             rho *= self.pi[state][action] / self.b[state][action]
 
